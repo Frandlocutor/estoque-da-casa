@@ -1,0 +1,35 @@
+name: Publicar app
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Monta o site
+        run: |
+          mkdir -p site
+          cp index.html manifest.json politica.html site/
+          SITE="https://frandlocutor.github.io/estoque-da-casa"
+          for f in banner-faixa.jpg fundo.jpg icone-512.png icone-192.png apple-touch-icon.png icone.png; do
+            if [ -f "img/$f" ]; then cp "img/$f" site/; else curl -sfL --retry 5 --retry-delay 3 "$SITE/$f" -o "site/$f"; fi
+          done
+          ls -la site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
