@@ -24,8 +24,8 @@ jobs:
           B="https://yt3.googleusercontent.com/oQX3CLkqksfLH7eIWVedvX9r8iurZQGh8LBqIwpwVDq1jp7z1A0VQb-sVT05c1iipW3VXIlFQA"
           mkdir -p site
           cp index.html manifest.json politica.html site/
-          curl -sfL "$B=w2048-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj" -o recorte.jpg
-          curl -sfL "$B=w2048-k-c0xffffffff-no-nd-rj" -o inteiro.jpg
+          curl -sfL --retry 6 --retry-delay 5 --retry-all-errors -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130" "$B=w2048-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj" -o recorte.jpg
+          curl -sfL --retry 6 --retry-delay 5 --retry-all-errors -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130" "$B=w2048-k-c0xffffffff-no-nd-rj" -o inteiro.jpg
           convert recorte.jpg -resize 1400x -quality 84 site/banner-faixa.jpg
           convert inteiro.jpg -resize 2048x -crop 2048x420+0+732 +repage -resize 1400x -quality 80 site/fundo.jpg
           convert recorte.jpg -resize 2048x -crop 250x250+1440+89 +repage -resize 512x512 site/icone-512.png
